@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sheets Data</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Google Sheets Data</h2>
+
+<table id="dataTable">
+  <thead>
+    <tr>
+      <th>Column A</th>
+      <th>Column B</th>
+      <th>Column C</th>
+      <th>Column D</th>
+      <th>Column E</th>
+      <th>Column F</th>
+      <th>Column G</th>
+      <th>Column H</th>
+      <th>Column I</th>
+      <th>Column J</th>
+      <th>Column K</th>
+      <th>Column L</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Data will be populated here -->
+  </tbody>
+</table>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpZrnrbqmMAZqqTFre3fgoZa73ZiYj7XhJzNXSHYhyXIVQb-WjCJfY2K25Rxm28U7JuCdXTbOOOLXy/pub?output=csv';
+    
+    // Using a CORS proxy to bypass CORS restriction
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const finalUrl = proxyUrl + url;
+
+    fetch(finalUrl)
+      .then(response => response.text())
+      .then(data => {
+        // Split the CSV data into rows
+        const rows = data.split('\n');
+        const tableBody = document.querySelector("#dataTable tbody");
+
+        // Loop through each row and create table rows
+        rows.forEach(row => {
+          const cells = row.split(',');
+          if (cells.length > 1) {
+            let newRow = tableBody.insertRow();
+            for (let i = 0; i < 12; i++) {
+              let newCell = newRow.insertCell();
+              newCell.textContent = cells[i] || ''; // Populate each cell
+            }
+          }
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching the Google Sheet data:", error);
+      });
+  });
+</script>
+
+</body>
+</html>
